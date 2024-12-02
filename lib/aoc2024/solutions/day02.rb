@@ -19,6 +19,13 @@ module Aoc2024
     def self.solve1
       val = 0
 
+      @@lines.each do |line|
+        levels = line.split(" ").to_a
+
+        diffs = levels.map(&:to_i).each_cons(2).map { |p| p.first - p.last }
+        val += 1 if diffs.all? { |d| d > 0 && d <= 3} || diffs.all? { |d| d < 0 && d >= -3 }
+      end
+
       return val
     end
 
