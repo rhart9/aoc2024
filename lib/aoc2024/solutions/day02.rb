@@ -22,15 +22,30 @@ module Aoc2024
       @@lines.each do |line|
         levels = line.split(" ").to_a
 
-        diffs = levels.map(&:to_i).each_cons(2).map { |p| p.first - p.last }
-        val += 1 if diffs.all? { |d| d > 0 && d <= 3} || diffs.all? { |d| d < 0 && d >= -3 }
+        val += 1 if solve_work(levels)
       end
 
       return val
     end
 
+    def self.solve_work(levels)
+      diffs = levels.map(&:to_i).each_cons(2).map { |p| p.first - p.last }
+      return diffs.all? { |d| d > 0 && d <= 3} || diffs.all? { |d| d < 0 && d >= -3 }
+    end
+
     def self.solve2
       val = 0
+      
+      @@lines.each do |line|
+        levels = line.split(" ").to_a
+
+        (0...levels.length).each do |i|
+          if solve_work(levels.each_with_index.select { |l, idx| i != idx }.map(&:first))
+            val += 1
+            break
+          end
+        end
+      end
 
       return val
     end
