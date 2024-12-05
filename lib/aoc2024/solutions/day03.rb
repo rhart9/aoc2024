@@ -3,7 +3,7 @@
 module Aoc2024
   class Day03
     def self.read_input(filename)
-      @@lines = File.readlines(filename, chomp: true)
+      @@lines = File.readlines(filename, chomp: true).reduce(&:concat)
     end
 
     def self.solve
@@ -17,19 +17,28 @@ module Aoc2024
     end
 
     def self.solve1
-      val = 0
-
-      @@lines.each do |line|
-        val += line.scan(/mul\((\d{1,3}),(\d{1,3})\)/).map { |match| match.map(&:to_i).reduce(&:*) }.reduce(&:+)
-      end
-
-      return val
+      return solve_work(@@lines)
     end
 
     def self.solve2
-      val = 0
+      mod_lines = +""
+      enabled = true
 
-      return val
+      (0...@@lines.length).each do |i|
+        if @@lines[i...i+7] == "don't()"
+          enabled = false
+        elsif @@lines[i...i+4] == "do()"
+          enabled = true
+        end
+
+        mod_lines << @@lines[i] if enabled
+      end
+
+      return solve_work(mod_lines)
+    end
+
+    def self.solve_work(line)
+      return line.scan(/mul\((\d{1,3}),(\d{1,3})\)/).map { |match| match.map(&:to_i).reduce(&:*) }.reduce(&:+)
     end
   end
 end
